@@ -139,14 +139,8 @@ impl Capturer {
     }
 
     /// Get the next captured frame
-    pub fn get_next_frame(&self) -> Result<Frame, mpsc::RecvError> {
-        loop {
-            let res = self.rx.recv()?;
-
-            if let Some(frame) = self.engine.process_channel_item(res) {
-                return Ok(frame);
-            }
-        }
+    pub fn get_next_frame(&self) -> Result<Frame, mpsc::TryRecvError> {
+        return self.rx.try_recv();
     }
 
     /// Get the dimensions the frames will be captured in
